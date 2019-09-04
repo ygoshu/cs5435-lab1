@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css" />
+</head>
+
+<body>
+  {% if session_user %}
+  <p>
+      <p>Current user: {{ session_user.username }}</p>
+      <p>
+          <form action="/logout" method="post">
+              <input type="submit" value="Logout"/>
+          </form>
+      </p>
+      <p>
+          <a href="{{ '/{}'.format(session_user.username) }}" ><button>Profile</button></a>
+      </p>
+  </div>
+  {% endif %}
+  {% block content %}{% endblock %}
+</body>
+
+</html>

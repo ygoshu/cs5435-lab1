@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<h1>{{ user.username }}</h1>
+<div><strong>Coins:</strong> {{ user.coins }}</div>
+
+{% if user.username == session_user.username %}
+Pay coins?</br>
+    <form action="/pay" method="post">
+        <p>To: <input name="recipient" type="text" /></p>
+        <p>Amount: <input name="amount" type="number" /></p>
+        <p><input type="submit" value="Pay"/></p>
+    </form>
+
+    {% if error %}
+    <div class="error"><p>{{ error }}</p></div>
+    {% endif %}
+
+{% endif %}
+
+{% endblock %}
