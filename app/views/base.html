@@ -8,16 +8,14 @@
 
 <body>
   {% if session_user %}
-  <p>
-      <p>Current user: {{ session_user.username }}</p>
-      <p>
-          <form action="/logout" method="post">
-              <input type="submit" value="Logout"/>
-          </form>
-      </p>
-      <p>
-          <a href="{{ '/{}'.format(session_user.username) }}" ><button>Profile</button></a>
-      </p>
+  <div class="navbar">
+    <div>Logged in as: <strong>{{ session_user.username }}</strong></div>
+    <div>
+      <form class="navbar-logout-button" action="/logout" method="post">
+        <input type="submit" value="Logout"/>
+      </form>
+      <a href="{{ '/{}'.format(session_user.username) }}" ><button>Profile</button></a>
+    </div>
   </div>
   {% endif %}
   {% block content %}{% endblock %}
