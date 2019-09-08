@@ -13,7 +13,7 @@ TEMPLATE_PATH.insert(0, 'app/views/')
 
 def run_server():
     # database setup
-    engine = create_engine('sqlite:///:memory:', echo=True)
+    engine = create_engine('sqlite:///:memory:')
     app.models.base.Base.metadata.create_all(engine)
 
     # initialize database
