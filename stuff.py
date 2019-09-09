@@ -21,11 +21,12 @@ def attempt_login(username, password):
                     })
     return response.status_code == codes.ok
 
-def credential_stuffing_attack():
+def credential_stuffing_attack(creds):
     pass
 
 def main():
-    credential_stuffing_attack()
+    creds = load_breach(PLAINTEXT_BREACH_PATH)
+    credential_stuffing_attack(creds)
 
 if __name__ == "__main__":
     main()
