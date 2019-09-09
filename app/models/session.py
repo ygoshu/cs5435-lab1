@@ -29,6 +29,10 @@ def get_session(db, id):
     return db.query(Session).filter_by(id=id).first()
 
 
+def get_session_by_username(db, username):
+    return db.query(Session).get(username)
+
+
 def delete_session(db, session):
     db.delete(session)
 

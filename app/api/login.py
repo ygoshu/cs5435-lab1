@@ -11,6 +11,7 @@ from app.models.user import create_user, get_user
 from app.models.session import (
     delete_session,
     create_session,
+    get_session_by_username,
     logged_in,
 )
 
@@ -44,7 +45,10 @@ def do_login(db):
     else:
         response.status = 400
         error = "Submission error."
-    if error is None:
+    if error is None:  # Perform login
+        existing_session = get_session_by_username(db, username)
+        if existing_session is not None:
+            delete_session(db, existing_session)
         session = create_session(db, username)
         response.set_cookie("session", str(session.get_id()))
         return redirect("/{}".format(username))
