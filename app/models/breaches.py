@@ -50,9 +50,9 @@ def create_salted_breach_entry(db, username, salted_password, salt):
     return breach
 
 def get_breaches(db, username):
-    plaintext_breaches = db.query(PlaintextBreach).filter_by(username=username)
-    hashed_breaches = db.query(HashedBreach).filter_by(username=username)
-    salted_breaches = db.query(SaltedBreach).filter_by(username=username)
+    plaintext_breaches = db.query(PlaintextBreach).filter_by(username=username).all()
+    hashed_breaches = db.query(HashedBreach).filter_by(username=username).all()
+    salted_breaches = db.query(SaltedBreach).filter_by(username=username).all()
     return (plaintext_breaches, hashed_breaches, salted_breaches)
 
 
