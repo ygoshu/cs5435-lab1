@@ -4,7 +4,7 @@ from random import getrandbits
 
 # Generate 128-bit random salt as string of hex values
 def random_salt():
-    return getrandbits(16).to_bytes(2, byteorder='little').hex()
+    return getrandbits(128).to_bytes(16, byteorder='little').hex()
 
 
 # Input: string; Output: string of hex values
