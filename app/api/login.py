@@ -27,11 +27,11 @@ def is_comprimised_accounts(db, username, password):
          return True
    for entry in hashed_breaches:
        dict_format = entry.__dict__
-       if (hash_sha256(password) == dic_format["hashed_password"]):
+       if (hash_sha256(password) == dict_format["hashed_password"]):
          return True
    for entry in salted_breaches:
-       dict_fomat = entry.__dict__
-       if (hash_pbkdf2(password, dic_format["salt"]) == dic_format["salted_password"]):
+       dict_format = entry.__dict__
+       if (hash_pbkdf2(password, dict_format["salt"]) == dict_format["salted_password"]):
            return True
    return False
 
@@ -57,7 +57,6 @@ def do_login(db):
             error = "{} is already taken.".format(username)
         else:
             if not is_comprimised_accounts(db, username, password): 
-             
                 create_user(db, username, password)
             else:
                 response.status = 401
