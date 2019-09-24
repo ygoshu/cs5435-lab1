@@ -1,6 +1,10 @@
 from sqlalchemy import Column, Integer, String
 
 from app.models.base import Base
+from app.util.hash import *
+import random 
+import string
+import binascii
 
 class User(Base):
     __tablename__ = "users"
@@ -8,6 +12,7 @@ class User(Base):
     username = Column(String, primary_key=True)
     password = Column(String)
     coins = Column(Integer)
+    salt = Column(String)
 
     def get_coins(self):
         return self.coins
@@ -19,10 +24,14 @@ class User(Base):
         self.coins -= i
 
 def create_user(db, username, password):
+    
+    salt = ''.join(random.choice('0123456789abcdef') for n in range(30))
+    salted_password = hash_pbkdf2(password, salt)
     user = User(
         username=username,
-        password=password,
+        password=salted_password,
         coins=100,
+        salt=salt
     )
     db.add(user)
     return user

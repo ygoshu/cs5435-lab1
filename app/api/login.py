@@ -8,17 +8,32 @@ from bottle import (
 )
 
 from app.models.user import create_user, get_user
+from app.models.breaches import *
 from app.models.session import (
     delete_session,
     create_session,
     get_session_by_username,
     logged_in,
-)
-
-
+    )
+from app.util.hash import *
 @get('/login')
 def login():
     return template('login')
+def is_comprimised_accounts(db, username, password):
+   plaintext_breaches, hashed_breaches, salted_breaches = get_breaches(db, username)
+   for entry in plaintext_breaches:
+     dic_format = entry.__dict__
+     if(password == dic_format["password"]):
+         return True
+   for entry in hashed_breaches:
+       dict_format = entry.__dict__
+       if (hash_sha256(password) == dic_format["hashed_password"]):
+         return True
+   for entry in salted_breaches:
+       dict_fomat = entry.__dict__
+       if (hash_pbkdf2(password, dic_format["salt"]) == dic_format["salted_password"]):
+           return True
+   return False
 
 @post('/login')
 def do_login(db):
@@ -31,7 +46,7 @@ def do_login(db):
         if user is None:
             response.status = 401
             error = "{} is not registered.".format(username)
-        elif user.password != password:
+        elif user.password != hash_pbkdf2(password, user.salt):
             response.status = 401
             error = "Wrong password for {}.".format(username)
         else:
@@ -41,7 +56,12 @@ def do_login(db):
             response.status = 401
             error = "{} is already taken.".format(username)
         else:
-            create_user(db, username, password)
+            if not is_comprimised_accounts(db, username, password): 
+             
+                create_user(db, username, password)
+            else:
+                response.status = 401
+                error = "Attempted password for {} has been found in breached database .".format(username)
     else:
         response.status = 400
         error = "Submission error."

