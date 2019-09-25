@@ -18,7 +18,6 @@ def load_breaches(db):
         for creds in r:
             create_plaintext_breach_entry(db, creds[0], creds[1])
 
-    # TODO: Add logic for other types of breaches
     with open(HASHED_BREACH_PATH) as f:
         r = reader(f, delimiter=' ')
         header = next(r)
