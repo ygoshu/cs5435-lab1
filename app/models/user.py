@@ -24,8 +24,7 @@ class User(Base):
         self.coins -= i
 
 def create_user(db, username, password):
-    
-    salt = ''.join(random.choice('0123456789abcdef') for n in range(30))
+    salt = random_salt()
     salted_password = hash_pbkdf2(password, salt)
     user = User(
         username=username,
